@@ -72,7 +72,7 @@ def calculate_metrics(model: object, features: pd.DataFrame, labels: pd.Series) 
 def show_confusion_matrix(labels: pd.Series, predictions: object) -> None:
     """Render a readable confusion matrix for the selected model and data."""
     matrix = confusion_matrix(labels, predictions, labels=[0, 1])
-    figure, axis = plt.subplots(figsize=(5.2, 3.8))
+    figure, axis = plt.subplots(figsize=(5.4, 4.2), constrained_layout=True)
     sns.heatmap(
         matrix,
         annot=True,
@@ -85,12 +85,12 @@ def show_confusion_matrix(labels: pd.Series, predictions: object) -> None:
     )
     axis.set_xlabel("Predicted label")
     axis.set_ylabel("Actual label")
-    st.pyplot(figure, clear_figure=True)
+    st.pyplot(figure, use_container_width=True, clear_figure=True)
 
 
 def main() -> None:
     st.title("Breast Cancer Classifier Lab")
-    st.caption("ML Assignment 2 - five supervised classification models on the UCI Breast Cancer dataset")
+    st.caption("ML Assignment 2: Comparative Analysis of Five Supervised Classification Models Using the UCI Breast Cancer Dataset")
 
     try:
         metadata, loaded_models, baseline_metrics = load_project_assets()
@@ -116,12 +116,6 @@ def main() -> None:
             f"**Held-out test rows:** {metadata['test_rows']}"
         )
         st.caption("Target labels: 0 = Malignant, 1 = Benign")
-
-    st.subheader("Benchmark comparison on the held-out test set")
-    formatted_baseline = baseline_metrics.copy()
-    for column in formatted_baseline.columns[1:]:
-        formatted_baseline[column] = formatted_baseline[column].map(lambda value: f"{value:.4f}")
-    st.dataframe(formatted_baseline, hide_index=True, use_container_width=True)
 
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
@@ -161,20 +155,38 @@ def main() -> None:
         for column, (metric_name, score) in zip(metric_columns, scores.items()):
             column.metric(metric_name, "N/A" if score is None else f"{score:.4f}")
 
-        left, right = st.columns([1, 1])
+        left, right = st.columns([0.9, 1.1], gap="large", vertical_alignment="top")
         with left:
-            st.markdown("#### Confusion matrix")
-            show_confusion_matrix(labels.loc[valid_rows], valid_predictions)
+            with st.container(border=True):
+                st.markdown("**Confusion Matrix**")
+                show_confusion_matrix(labels.loc[valid_rows], valid_predictions)
         with right:
-            st.markdown("#### Classification report")
             report = classification_report(
                 labels.loc[valid_rows],
                 valid_predictions,
                 labels=[0, 1],
                 target_names=["malignant", "benign"],
+                output_dict=True,
                 zero_division=0,
             )
-            st.code(report)
+            report_table = pd.DataFrame(report).transpose().rename(
+                index={
+                    "malignant": "Malignant",
+                    "benign": "Benign",
+                    "accuracy": "Accuracy",
+                    "macro avg": "Macro Average",
+                    "weighted avg": "Weighted Average",
+                }
+            )
+            report_table["support"] = report_table["support"].round().astype(int)
+            with st.container(border=True):
+                st.markdown("**Classification Report**")
+                st.dataframe(
+                    report_table.style.format(
+                        {"precision": "{:.3f}", "recall": "{:.3f}", "f1-score": "{:.3f}"}
+                    ),
+                    use_container_width=True,
+                )
     else:
         st.info("No `target` column was found, so the app displays predictions without evaluation metrics.")
 
@@ -186,6 +198,14 @@ def main() -> None:
         file_name="model_predictions.csv",
         mime="text/csv",
     )
+
+    st.divider()
+    st.subheader("Performance Comparison Across All Models")
+    st.caption("Scores calculated using the held-out test dataset.")
+    formatted_baseline = baseline_metrics.copy()
+    for column in formatted_baseline.columns[1:]:
+        formatted_baseline[column] = formatted_baseline[column].map(lambda value: f"{value:.4f}")
+    st.dataframe(formatted_baseline, hide_index=True, use_container_width=True)
 
 
 if __name__ == "__main__":
