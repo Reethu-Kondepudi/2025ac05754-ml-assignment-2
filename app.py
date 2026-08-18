@@ -154,10 +154,6 @@ def main() -> None:
 
         left, right = st.columns([0.9, 1.1], gap="large", vertical_alignment="top")
         with left:
-            with st.container(border=True):
-                st.markdown("**Confusion Matrix**")
-                show_confusion_matrix(labels.loc[valid_rows], valid_predictions)
-        with right:
             report = classification_report(
                 labels.loc[valid_rows],
                 valid_predictions,
@@ -184,6 +180,10 @@ def main() -> None:
                     ),
                     use_container_width=True,
                 )
+        with right:
+            with st.container(border=True):
+                st.markdown("**Confusion Matrix**")
+                show_confusion_matrix(labels.loc[valid_rows], valid_predictions)
     else:
         st.info("No `target` column was found, so the app displays predictions without evaluation metrics.")
 
