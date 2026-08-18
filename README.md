@@ -83,7 +83,7 @@ All models use the identical training and test partitions. Missing numeric value
 
 ## Mandatory submission links
 
-- GitHub repository: **[replace with your GitHub repository URL]**
+- GitHub repository: [https://github.com/Reethu-Kondepudi/2025ac05754-ml-assignment-2](https://github.com/Reethu-Kondepudi/2025ac05754-ml-assignment-2)
 - Live Streamlit app: **[replace with your Streamlit app URL]**
 - BITS Virtual Lab proof: add one screenshot of your own assignment execution to the final submission PDF.
 

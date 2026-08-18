@@ -50,8 +50,8 @@ def load_project_assets() -> tuple[dict[str, object], dict[str, object], pd.Data
 
 
 def artifact_key(model_name: str) -> str:
-    """Use a consistent key for display names and artifact filenames."""
-    return model_name.lower().replace(" ", "_").title()
+    """Return the display name used as the in-memory model dictionary key."""
+    return model_name
 
 
 def calculate_metrics(model: object, features: pd.DataFrame, labels: pd.Series) -> tuple[dict[str, object], object, object]:
