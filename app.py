@@ -34,7 +34,7 @@ st.set_page_config(page_title="Breast Cancer Classifier Lab", page_icon="BC", la
 
 @st.cache_resource
 def load_project_assets() -> tuple[dict[str, object], dict[str, object], pd.DataFrame]:
-    """Load model artifacts and static metadata once per app session."""
+    """Load the saved metadata, trained models, and benchmark metrics once per session."""
     metadata_path = ARTIFACT_DIR / "metadata.json"
     if not metadata_path.exists() or not METRICS_PATH.exists():
         raise FileNotFoundError("Project artifacts are missing. Run: python model/train_models.py")
@@ -50,12 +50,12 @@ def load_project_assets() -> tuple[dict[str, object], dict[str, object], pd.Data
 
 
 def artifact_key(model_name: str) -> str:
-    """Return the display name used as the in-memory model dictionary key."""
+    """Return the display name used to retrieve a model from the loaded-model dictionary."""
     return model_name
 
 
 def calculate_metrics(model: object, features: pd.DataFrame, labels: pd.Series) -> tuple[dict[str, object], object, object]:
-    """Return metrics, predictions, and optional positive-class probabilities."""
+    """Predict the supplied data and calculate all evaluation metrics required by the assignment."""
     predictions = model.predict(features)
     probabilities = model.predict_proba(features)[:, 1] if hasattr(model, "predict_proba") else None
     scores: dict[str, object] = {
@@ -70,7 +70,7 @@ def calculate_metrics(model: object, features: pd.DataFrame, labels: pd.Series) 
 
 
 def show_confusion_matrix(labels: pd.Series, predictions: object) -> None:
-    """Render a readable confusion matrix for the selected model and data."""
+    """Display a labelled confusion matrix for the selected binary classification model."""
     matrix = confusion_matrix(labels, predictions, labels=[0, 1])
     figure, axis = plt.subplots(figsize=(5.4, 4.2), constrained_layout=True)
     sns.heatmap(
@@ -89,6 +89,7 @@ def show_confusion_matrix(labels: pd.Series, predictions: object) -> None:
 
 
 def main() -> None:
+    """Build the Streamlit interface and show predictions, metrics, and model comparisons."""
     st.title("Breast Cancer Classifier Lab")
     st.caption("ML Assignment 2: Comparative Analysis of Five Supervised Classification Models Using the UCI Breast Cancer Dataset")
 
