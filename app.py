@@ -152,7 +152,7 @@ def main() -> None:
         for column, (metric_name, score) in zip(metric_columns, scores.items()):
             column.metric(metric_name, "N/A" if score is None else f"{score:.4f}")
 
-        left, right = st.columns([0.9, 1.1], gap="large", vertical_alignment="top")
+        left, right = st.columns([1.1, 0.9], gap="large", vertical_alignment="top")
         with left:
             report = classification_report(
                 labels.loc[valid_rows],
