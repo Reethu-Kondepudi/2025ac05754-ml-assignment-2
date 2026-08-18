@@ -119,10 +119,8 @@ def main() -> None:
 
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
-        source_name = uploaded_file.name
     elif use_example:
         data = pd.read_csv(DEFAULT_TEST_DATA_PATH)
-        source_name = "bundled test_data.csv"
     else:
         st.info("Upload a CSV or select the bundled test file to see predictions and model-specific results.")
         return
@@ -136,7 +134,6 @@ def main() -> None:
     features = data[feature_columns].apply(pd.to_numeric, errors="coerce")
     labels = data[TARGET_COLUMN] if TARGET_COLUMN in data.columns else None
     st.subheader(f"Selected model: {model_name}")
-    st.caption(f"Input: {source_name} ({len(data)} rows)")
 
     predictions = model.predict(features)
     output = data.copy()
