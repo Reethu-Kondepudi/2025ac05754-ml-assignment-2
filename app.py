@@ -106,6 +106,7 @@ def main() -> None:
     st.sidebar.divider()
     st.sidebar.subheader("Data input")
     uploaded_file = st.sidebar.file_uploader("Upload test data (CSV)", type=["csv"])
+    st.sidebar.caption("Use the 30 feature columns in `test_data.csv`. Include `target` to calculate evaluation metrics.")
     use_example = st.sidebar.checkbox("Use bundled test_data.csv", value=uploaded_file is None)
 
     with st.expander("Dataset and implementation details", expanded=False):
@@ -114,11 +115,7 @@ def main() -> None:
             f"**Rows:** {metadata['instances']} | **Features:** {len(metadata['features'])} | "
             f"**Held-out test rows:** {metadata['test_rows']}"
         )
-        st.markdown(
-            "**Target labels:** `0 = Malignant`, `1 = Benign`  \n"
-            "**Upload format:** Include the same 30 numeric feature columns as `test_data.csv`. "
-            "Add a `target` column if you want evaluation metrics."
-        )
+        st.caption("Target labels: 0 = Malignant, 1 = Benign")
 
     st.subheader("Benchmark comparison on the held-out test set")
     formatted_baseline = baseline_metrics.copy()
