@@ -110,7 +110,8 @@ def main() -> None:
 
     with st.expander("Dataset and implementation details", expanded=False):
         st.write(
-            f"**Dataset:** {metadata['dataset_name']}  \\n+            **Rows:** {metadata['instances']} | **Features:** {len(metadata['features'])} | "
+            f"**Dataset:** {metadata['dataset_name']}  \n"
+            f"**Rows:** {metadata['instances']} | **Features:** {len(metadata['features'])} | "
             f"**Held-out test rows:** {metadata['test_rows']}"
         )
         st.write("Class 0 = malignant; Class 1 = benign. The app expects the same 30 numeric feature columns used in `test_data.csv`.")
