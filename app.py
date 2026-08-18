@@ -114,7 +114,11 @@ def main() -> None:
             f"**Rows:** {metadata['instances']} | **Features:** {len(metadata['features'])} | "
             f"**Held-out test rows:** {metadata['test_rows']}"
         )
-        st.write("Class 0 = malignant; Class 1 = benign. The app expects the same 30 numeric feature columns used in `test_data.csv`.")
+        st.markdown(
+            "**Target labels:** `0 = Malignant`, `1 = Benign`  \n"
+            "**Upload format:** Include the same 30 numeric feature columns as `test_data.csv`. "
+            "Add a `target` column if you want evaluation metrics."
+        )
 
     st.subheader("Benchmark comparison on the held-out test set")
     formatted_baseline = baseline_metrics.copy()
